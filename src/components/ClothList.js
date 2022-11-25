@@ -17,7 +17,9 @@ export default function Clothlist(){
         {field: 'name' , sortable: true, filter: true},
         {field: 'type' , sortable: true, filter: true},
         {field: 'producer' , sortable: true, filter: true},
-        {field: 'price' , sortable: true, filter: true}
+        {field: 'price' , sortable: true, filter: true},
+        {width: 120,
+        cellRenderer: params => <Button color = 'error' startIcon={<DeleteIcon />} onClick={() => deleteClothes(params.data)}>Delete</Button>}
     ]
 
 
@@ -46,7 +48,7 @@ export default function Clothlist(){
     fetch('api/cloths', {
         method: 'POST', 
         headers: {'Content-type' : 'application/json'},
-        body: JSON.stringify(customer)
+        body: JSON.stringify(cloth)
     })
     .then(response => {
         if (response.ok)
