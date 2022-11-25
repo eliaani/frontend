@@ -1,30 +1,31 @@
 import React from "react";
 import { AgGridReact } from 'ag-grid-react';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@mui/material";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
 
 export default function Clothlist(){
-    const [cloths, setCloths] = useState([]);
+
+    const gridRef = useRef();
+    const [clothes, setClothes] = useState([]);
     
-    const [columnDefs] = useState([
+    const columnDefs = [
         {field: 'name' , sortable: true, filter: true},
         {field: 'type' , sortable: true, filter: true},
         {field: 'producer' , sortable: true, filter: true},
         {field: 'price' , sortable: true, filter: true}
-    ])
-}
+    ]
 
-useEffect(() => {
-    getCloths();
-}, []);
 
-const getCloths = () => {
-    fetch('localhost:8080/cloths')
-    .then(response => response.json())
-    .then(data => setClothes(data.content))
+    useEffect(() => fetchData(), []);
 
+    const fetchData = () => {
+        fetch('/api/cloths')
+        .then(response => response.json())
+        .then(data => setClothes(data._embedded.cloths))
+        console.log("clothes")
+    }
 
 return(
     <>
@@ -35,6 +36,8 @@ return(
         pagination={true}
         paginationPageSize={10}
         suppressCellFocus={true}
+        onGridReady={params => gridRef.current = params.api}
+        ref={gridRef}
     />
     </div>
     </>

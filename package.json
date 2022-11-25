@@ -2,6 +2,7 @@
   "name": "fronttiprojekti",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:8080",
   "dependencies": {
     "@emotion/styled": "^11.10.5",
     "@mui/icons-material": "^5.10.15",
