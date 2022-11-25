@@ -5,6 +5,7 @@ import { Button } from "@mui/material";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
 import DeleteIcon from '@mui/icons-material/Delete';
+import AddCloth from "./AddCloth";
 
 export default function Clothlist(){
 
@@ -40,8 +41,27 @@ export default function Clothlist(){
         }
       }
 
+
+    const addCloth = (cloth) => {
+    fetch('api/cloths', {
+        method: 'POST', 
+        headers: {'Content-type' : 'application/json'},
+        body: JSON.stringify(customer)
+    })
+    .then(response => {
+        if (response.ok)
+            fetchData();
+        else
+            alert('Something went wrong in the addition!')
+    })
+    .catch(err => console.error(err))
+}
+
+
+
 return (
     <div>
+        <AddCloth addCloth={addCloth}/>
         <Button startIcon={<DeleteIcon/>} onClick={deleteClothes} variant="contained">Delete</Button>
     <div className='ag-theme-material' style={{height: 650, width: '100%', margin:'auto'}}>
     <AgGridReact
