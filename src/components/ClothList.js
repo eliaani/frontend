@@ -20,6 +20,7 @@ export default function Clothlist(){
 
     useEffect(() => fetchData(), []);
 
+
     const fetchData = () => {
         fetch('/api/cloths')
         .then(response => response.json())
@@ -27,8 +28,7 @@ export default function Clothlist(){
         console.log("clothes")
     }
 
-return(
-    <>
+return (
     <div className='ag-theme-material' style={{height: 650, width: '100%', margin:'auto'}}>
     <AgGridReact
         rowData={clothes}
@@ -40,6 +40,5 @@ return(
         ref={gridRef}
     />
     </div>
-    </>
-);
-}
+)
+};
