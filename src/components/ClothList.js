@@ -4,11 +4,13 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@mui/material";
 import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 export default function Clothlist(){
 
     const gridRef = useRef();
     const [clothes, setClothes] = useState([]);
+    const [open, setOpen] = useState(false);
     
     const columnDefs = [
         {field: 'name' , sortable: true, filter: true},
@@ -28,7 +30,19 @@ export default function Clothlist(){
         console.log("clothes")
     }
 
+    const deleteClothes = () => {
+        if (gridRef.current.getSelectedNodes().length > 0) {
+        setClothes(clothes.filter((cloth, index) =>
+        index !== gridRef.current.getSelectedNodes()[0].childIndex));
+        setOpen(true);
+        } else {
+          alert('Select row first!');
+        }
+      }
+
 return (
+    <div>
+        <Button startIcon={<DeleteIcon/>} onClick={deleteClothes} variant="contained">Delete</Button>
     <div className='ag-theme-material' style={{height: 650, width: '100%', margin:'auto'}}>
     <AgGridReact
         rowData={clothes}
@@ -38,7 +52,9 @@ return (
         suppressCellFocus={true}
         onGridReady={params => gridRef.current = params.api}
         ref={gridRef}
+        rowSelection='single'
     />
+    </div>
     </div>
 )
 };
