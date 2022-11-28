@@ -6,6 +6,7 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCloth from "./AddCloth";
+import Snackbar from '@mui/material/Snackbar';
 
 export default function Clothlist(){
 
@@ -25,7 +26,17 @@ export default function Clothlist(){
 
     useEffect(() => fetchData(), []);
 
+    const handleClick = () => {
+        setOpen(true);
+      };
 
+    const handleClose = (event, reason) => {
+        if (reason === 'clickaway') {
+          return;
+        }
+        setOpen(false);
+    }
+    
     const fetchData = () => {
         fetch('/api/cloths')
         .then(response => response.json())
@@ -41,6 +52,7 @@ export default function Clothlist(){
         } else {
           alert('Select row first!');
         }
+        handleClick();
       }
 
 
@@ -77,6 +89,13 @@ return (
         rowSelection='single'
     />
     </div>
+    <Snackbar
+            open={open}
+            autoHideDuration={6000}
+            onClose={handleClose}
+            message="Cloth deleted successfully"
+            action={deleteClothes}
+            />
     </div>
 )
 };
