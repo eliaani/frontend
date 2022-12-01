@@ -6,17 +6,19 @@ import 'ag-grid-community/styles/ag-grid.css';
 import 'ag-grid-community/styles/ag-theme-material.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCloth from "./AddCloth";
+import Producerlist from "./ProducerList";
 
 export default function Clothlist(){
 
     const gridRef = useRef();
     const [clothes, setClothes] = useState([]);
     const [open, setOpen] = useState(false);
+    const [producer, setProducer] = useState([]);
     
     const columnDefs = [
         {field: 'name' , sortable: true, filter: true},
         {field: 'type' , sortable: true, filter: true},
-        {field: 'producer' , sortable: true, filter: true},
+        {field: 'producer.name', headerName: 'Producer', sortable: true, filter: true},
         {field: 'price' , sortable: true, filter: true},
         {width: 120,
         cellRenderer: params => <Button color = 'error' startIcon={<DeleteIcon />} onClick={() => deleteClothes(params.data)}>Delete</Button>}
@@ -31,6 +33,15 @@ export default function Clothlist(){
         .then(response => response.json())
         .then(data => setClothes(data._embedded.cloths))
         console.log("clothes")
+    }
+
+    useEffect(() => fetchProducer(), []);
+
+    const fetchProducer = () => {
+        fetch('/api/producers')
+        .then(response => response.json())
+        .then(data => setProducer(data._embedded.producers))
+        console.log("producer")
     }
 
     const deleteClothes = () => {
@@ -65,7 +76,7 @@ return (
     <div>
         <AddCloth addCloth={addCloth}/>
         <Button startIcon={<DeleteIcon/>} onClick={deleteClothes} variant="contained">Delete</Button>
-    <div className='ag-theme-material' style={{height: 650, width: '100%', margin:'auto'}}>
+    <div className='ag-theme-material' style={{height: 400, width: '65%', margin:'auto'}}>
     <AgGridReact
         rowData={clothes}
         columnDefs={columnDefs}
