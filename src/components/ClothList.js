@@ -7,6 +7,7 @@ import 'ag-grid-community/styles/ag-theme-material.css';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddCloth from "./AddCloth";
 import Snackbar from '@mui/material/Snackbar';
+import Producerlist from "./ProducerList";
 
 export default function Clothlist(){
     
@@ -15,11 +16,12 @@ export default function Clothlist(){
     const gridRef = useRef();
     const [clothes, setClothes] = useState([]);
     const [open, setOpen] = useState(false);
+    const [producer, setProducer] = useState([]);
     
     const columnDefs = [
         {field: 'name' , sortable: true, filter: true},
         {field: 'type' , sortable: true, filter: true},
-        {field: 'producer' , sortable: true, filter: true},
+        {field: 'producer.name', headerName: 'Producer', sortable: true, filter: true},
         {field: 'price' , sortable: true, filter: true},
         {width: 120,
         field: '_links.self.href',
@@ -56,6 +58,15 @@ export default function Clothlist(){
             .catch(err => console.error(err))
         }
       }
+
+    useEffect(() => fetchProducer(), []);
+
+    const fetchProducer = () => {
+        fetch('/api/producers')
+        .then(response => response.json())
+        .then(data => setProducer(data._embedded.producers))
+        console.log("producer")
+    }
 
     const deleteClothes = () => {
         if (gridRef.current.getSelectedNodes().length > 0) {
