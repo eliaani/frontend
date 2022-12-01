@@ -9,6 +9,8 @@ import AddCloth from "./AddCloth";
 import Snackbar from '@mui/material/Snackbar';
 
 export default function Clothlist(){
+    
+    
 
     const gridRef = useRef();
     const [clothes, setClothes] = useState([]);
@@ -20,7 +22,10 @@ export default function Clothlist(){
         {field: 'producer' , sortable: true, filter: true},
         {field: 'price' , sortable: true, filter: true},
         {width: 120,
-        cellRenderer: params => <Button color = 'error' startIcon={<DeleteIcon />} onClick={() => deleteClothes(params.data)}>Delete</Button>}
+        field: '_links.self.href',
+        headerName: '',
+            cellRenderer: ({value}) => <Button color = 'error' startIcon={<DeleteIcon />} onClick={() => deleteCar(value)}>Delete</Button>
+        }
     ]
 
 
@@ -43,6 +48,14 @@ export default function Clothlist(){
         .then(data => setClothes(data._embedded.cloths))
         console.log("clothes")
     }
+
+    const deleteCar = (link) => {
+        if (window.confirm('Are you sure?')) {
+            fetch(link, {method: 'DELETE'})
+            .then(res => fetchData())
+            .catch(err => console.error(err))
+        }
+      }
 
     const deleteClothes = () => {
         if (gridRef.current.getSelectedNodes().length > 0) {
