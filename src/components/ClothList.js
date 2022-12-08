@@ -11,8 +11,12 @@ import Producerlist from "./ProducerList";
 
 export default function Clothlist(){
     
+    const fetchData = () => {
+        fetch('/api/cloths')
+        .then(response => response.json())
+        .then(data => setClothes(data))
+    }
 
-    
     const gridRef = useRef();
     const [clothes, setClothes] = useState([]);
     const [open, setOpen] = useState(false);
@@ -27,7 +31,7 @@ export default function Clothlist(){
         {width: 120,
         field: '_links.self.href',
         headerName: '',
-            cellRenderer: ({value}) => <Button color = 'error' startIcon={<DeleteIcon />} onClick={() => deleteClothes(value)}>Delete</Button>
+            cellRenderer: (props) => <Button color = 'error' startIcon={<DeleteIcon />} onClick={() => deleteCloth(props.data.id)}>Delete</Button>
         }
     ]
 
@@ -44,26 +48,17 @@ export default function Clothlist(){
         }
         setOpen(false);
     }
-    
-    const fetchData = () => {
-        fetch('/getclothes')
-        .then(response => response.json())
-        .then(data => setClothes(data))
-        console.log("clothes")
-    }
-
-    const deleteClothes = () => {
-        window.confirm('Are you sure?')
-        if (gridRef.current.getSelectedNodes().length > 0) {
-        setClothes(clothes.filter((cloth, index) =>
-        index !== gridRef.current.getSelectedNodes()[0].childIndex));
-        setOpen(true);
-        } else {
-          alert('Select row first!');
+      
+      const deleteCloth = (id) => {
+        console.log(id)
+        if (window.confirm('Are you sure?')) {
+            fetch("api/cloths/" + id, { method: 'DELETE' })
+                .then(res => fetchData())
+                .catch(err => console.error(err))
+                
         }
-        handleClick();
-      }
 
+    }
 
     const addCloth = (cloth) => {
     fetch('api/cloths', {
@@ -80,7 +75,7 @@ export default function Clothlist(){
     .catch(err => console.error(err))
 }
 
-
+console.log(clothes)
 
 return (
     <div>
@@ -102,7 +97,7 @@ return (
             autoHideDuration={6000}
             onClose={handleClose}
             message="Cloth deleted successfully"
-            action={deleteClothes}
+            action={deleteCloth}
             />
     </div>
 )

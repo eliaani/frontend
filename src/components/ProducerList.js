@@ -20,7 +20,6 @@ export default function Producerlist(){
             fetch('/api/producers')
             .then(response => response.json())
             .then(data => setProducer(data._embedded.producers))
-            console.log("producer")
         }
 
         return (
