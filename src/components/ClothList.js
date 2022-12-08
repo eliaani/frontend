@@ -27,7 +27,7 @@ export default function Clothlist(){
         {width: 120,
         field: '_links.self.href',
         headerName: '',
-            cellRenderer: ({value}) => <Button color = 'error' startIcon={<DeleteIcon />} onClick={() => deleteCar(value)}>Delete</Button>
+            cellRenderer: ({value}) => <Button color = 'error' startIcon={<DeleteIcon />} onClick={() => deleteClothes(value)}>Delete</Button>
         }
     ]
 
@@ -52,15 +52,8 @@ export default function Clothlist(){
         console.log("clothes")
     }
 
-    const deleteCar = (link) => {
-        if (window.confirm('Are you sure?')) {
-            fetch(link, {method: 'DELETE'})
-            .then(res => fetchData())
-            .catch(err => console.error(err))
-        }
-      }
-
     const deleteClothes = () => {
+        window.confirm('Are you sure?')
         if (gridRef.current.getSelectedNodes().length > 0) {
         setClothes(clothes.filter((cloth, index) =>
         index !== gridRef.current.getSelectedNodes()[0].childIndex));
@@ -92,8 +85,7 @@ export default function Clothlist(){
 return (
     <div>
         <AddCloth addCloth={addCloth}/>
-        <Button startIcon={<DeleteIcon/>} onClick={deleteClothes} variant="contained">Delete</Button>
-    <div className='ag-theme-material' style={{height: 650, width: '100%', margin:'auto'}}>
+    <div className='ag-theme-material' style={{height: 650, width: '65%', margin:'auto'}}>
     <AgGridReact
         rowData={clothes}
         columnDefs={columnDefs}
