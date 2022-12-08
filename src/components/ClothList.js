@@ -11,8 +11,8 @@ import Producerlist from "./ProducerList";
 
 export default function Clothlist(){
     
-    
 
+    
     const gridRef = useRef();
     const [clothes, setClothes] = useState([]);
     const [open, setOpen] = useState(false);
@@ -21,7 +21,8 @@ export default function Clothlist(){
     const columnDefs = [
         {field: 'name' , sortable: true, filter: true},
         {field: 'type' , sortable: true, filter: true},
-        {field: 'producer.name', headerName: 'Producer', sortable: true, filter: true},
+        {field: 'producer', headerName: 'Producer', sortable: true, filter: true, 
+        valueGetter: (params) => params.data.producer.name},
         {field: 'price' , sortable: true, filter: true},
         {width: 120,
         field: '_links.self.href',
@@ -45,9 +46,9 @@ export default function Clothlist(){
     }
     
     const fetchData = () => {
-        fetch('/api/cloths')
+        fetch('/getclothes')
         .then(response => response.json())
-        .then(data => setClothes(data._embedded.cloths))
+        .then(data => setClothes(data))
         console.log("clothes")
     }
 
@@ -58,15 +59,6 @@ export default function Clothlist(){
             .catch(err => console.error(err))
         }
       }
-
-    useEffect(() => fetchProducer(), []);
-
-    const fetchProducer = () => {
-        fetch('/api/producers')
-        .then(response => response.json())
-        .then(data => setProducer(data._embedded.producers))
-        console.log("producer")
-    }
 
     const deleteClothes = () => {
         if (gridRef.current.getSelectedNodes().length > 0) {
