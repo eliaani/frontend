@@ -18,7 +18,11 @@ function TabApp(){
         <Tabs value={value} onChange={handleChange}>
             <Tab icon={<HomeIcon />} value='one' label='Home'/>
             <Tab icon={<CheckroomIcon />} value='two' label='Clothes'/>
+<<<<<<< HEAD
             <Tab icon={<FactoryIcon />} value='three' label='Producers'/>
+=======
+            <Tab icon={<FactoryIcon />}  value='three' label='Producers'/>
+>>>>>>> 53c1935c6eecde5150e1643d3b2626ca61db55f9
 
         </Tabs>
         {value === 'one' && <Home/>}
