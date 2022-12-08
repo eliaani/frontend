@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import Tabs from'@mui/material/Tabs';
 import Tab from'@mui/material/Tab';
 import Clothlist from './ClothList';
+import Home from './Home';
 import Producerlist from './ProducerList';
+import CheckroomIcon from '@mui/icons-material/Checkroom';
+import HomeIcon from '@mui/icons-material/Home';
+import FactoryIcon from '@mui/icons-material/Factory';
 
 function TabApp(){
     const [value, setValue] = useState('one');
@@ -12,12 +16,14 @@ function TabApp(){
     return(
     <div>
         <Tabs value={value} onChange={handleChange}>
-            <Tab value='one' label='Clothes'/>
-            <Tab value='two' label='Producers'/>
+            <Tab icon={<HomeIcon />} value='one' label='Home'/>
+            <Tab icon={<CheckroomIcon />} label='Clothes'/>
+            <Tab icon={<FactoryIcon />} label='Producers'/>
 
         </Tabs>
-        {value === 'one' && <Clothlist/>}
-        {value === 'two' && <Producerlist/>}
+        {value === 'one' && <Home/>}
+        {value === 'two' && <Clothlist/>}
+        {value === 'three' && <Producerlist/>}
     </div>
 );
 }
