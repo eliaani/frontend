@@ -1,10 +1,12 @@
 import React from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { useState, useEffect, useRef } from "react";
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
+import { MenuItem } from '@mui/material';
 
 export default function AddCloth(props) {
     const [open, setOpen] = React.useState(false);
@@ -26,6 +28,16 @@ export default function AddCloth(props) {
         props.addCloth(cloth);
         setOpen(false);
     }
+
+    const [producers, setProducers] = useState([]);
+
+    const fetchData2 = () => {
+        fetch('/api/producers')
+        .then(response => response.json())
+        .then(data => setProducers(data))
+    }
+
+    useEffect(() => fetchData2, []);
 
     return ( 
         <div>
@@ -53,11 +65,20 @@ export default function AddCloth(props) {
                 />   <TextField
                 margin='dense'
                 label='producer'
+                select
                 value={cloth.producer}
                 onChange={e => setCloth({...cloth, producer: e.target.value})}
                 fullWidth
                 variant='standard'
-                />   <TextField
+                >
+                {producers.map((option) => (
+                    <MenuItem key={option.producerid} value={option.name}>
+                        {option.name}
+                    </MenuItem>
+                    ))}
+                </TextField> 
+
+                    <TextField
                 margin='dense'
                 label='price'
                 value={cloth.price}

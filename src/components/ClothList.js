@@ -11,17 +11,17 @@ import Producerlist from "./ProducerList";
 
 export default function Clothlist(){
     
+    const gridRef = useRef();
+    const [clothes, setClothes] = useState([]);
+    const [open, setOpen] = useState(false);
+
+
     const fetchData = () => {
         fetch('/api/cloths')
         .then(response => response.json())
         .then(data => setClothes(data))
     }
-
-    const gridRef = useRef();
-    const [clothes, setClothes] = useState([]);
-    const [open, setOpen] = useState(false);
-    const [producer, setProducer] = useState([]);
-    
+   
     const columnDefs = [
         {field: 'name' , sortable: true, filter: true},
         {field: 'type' , sortable: true, filter: true},
@@ -55,9 +55,7 @@ export default function Clothlist(){
             fetch("api/cloths/" + id, { method: 'DELETE' })
                 .then(res => fetchData())
                 .catch(err => console.error(err))
-                
         }
-
     }
 
     const addCloth = (cloth) => {
