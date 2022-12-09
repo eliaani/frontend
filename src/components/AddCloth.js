@@ -10,34 +10,21 @@ import { MenuItem } from '@mui/material';
 
 export default function AddCloth(props) {
     const [open, setOpen] = React.useState(false);
-    const [cloth, setCloth] = React.useState({
-       name: '',
-       type: '',
-       producer: '',
-       price: '',
-    })
+    const [cloth, setCloth] = React.useState({})
     const handleClickOpen = () => {
         setOpen(true);
     }
     
       const handleClose = () => {
         setOpen(false);
+        setCloth({});
     }
     
       const handleSave = () => {
         props.addCloth(cloth);
         setOpen(false);
+        setCloth({});
     }
-
-    const [producers, setProducers] = useState([]);
-
-    const fetchData2 = () => {
-        fetch('/api/producers')
-        .then(response => response.json())
-        .then(data => setProducers(data))
-    }
-
-    useEffect(() => fetchData2, []);
 
     return ( 
         <div>
@@ -71,7 +58,7 @@ export default function AddCloth(props) {
                 fullWidth
                 variant='standard'
                 >
-                {producers.map((option) => (
+                {props.producers.map((option) => (
                     <MenuItem key={option.producerid} value={option}>
                         {option.name}
                     </MenuItem>
@@ -81,8 +68,10 @@ export default function AddCloth(props) {
                     <TextField
                 margin='dense'
                 label='price'
+                type='number'
+                format='number'
                 value={cloth.price}
-                onChange={e => setCloth({...cloth, price: e.target.value})}
+                onChange={e => setCloth({...cloth, price: +e.target.value})}
                 fullWidth
                 variant='standard'
                 />

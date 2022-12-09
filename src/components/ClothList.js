@@ -8,35 +8,37 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddCloth from "./AddCloth";
 import Snackbar from '@mui/material/Snackbar';
 import Producerlist from "./ProducerList";
+import EditCloth from "./EditCloth";
 
 export default function Clothlist(){
     
     const gridRef = useRef();
     const [clothes, setClothes] = useState([]);
+    const [producers, setProducers] = useState([]);
     const [open, setOpen] = useState(false);
 
+    const columnDefs = [
+        {field: 'name' , sortable: true, filter: true},
+        {field: 'type' , sortable: true, filter: true},
+        {field: 'producer', headerName: 'Producer', sortable: true, filter: true, valueGetter: (params) => params.data.producer.name},
+        {field: 'price' , sortable: true, filter: true},
+        {width: 120, headerName: '', cellRenderer: (props) => <Button color = 'error' startIcon={<DeleteIcon />} onClick={() => deleteCloth(props.data.id)}>Delete</Button>},
+        {width: 120, headerName: '', cellRenderer: (props) => <EditCloth editCloth={editCloth} cloth={props.data} producers={producers}/>},
+    ]
 
-    const fetchData = () => {
+    const fetchCloths = () => {
         fetch('/api/cloths')
         .then(response => response.json())
         .then(data => setClothes(data))
     }
-   
-    const columnDefs = [
-        {field: 'name' , sortable: true, filter: true},
-        {field: 'type' , sortable: true, filter: true},
-        {field: 'producer', headerName: 'Producer', sortable: true, filter: true, 
-        valueGetter: (params) => params.data.producer.name},
-        {field: 'price' , sortable: true, filter: true},
-        {width: 120,
-        field: '_links.self.href',
-        headerName: '',
-            cellRenderer: (props) => <Button color = 'error' startIcon={<DeleteIcon />} onClick={() => deleteCloth(props.data.id)}>Delete</Button>
-        }
-    ]
 
+    const fetchProducers = () => {
+        fetch('/api/producers')
+        .then(response => response.json())
+        .then(data => setProducers(data))
+    }
 
-    useEffect(() => fetchData(), []);
+    useEffect(() => {fetchCloths();fetchProducers()}, []);
 
     const handleClick = () => {
         setOpen(true);
@@ -53,7 +55,7 @@ export default function Clothlist(){
         console.log(id)
         if (window.confirm('Are you sure?')) {
             fetch("api/cloths/" + id, { method: 'DELETE' })
-                .then(res => fetchData())
+                .then(res => fetchCloths())
                 .catch(err => console.error(err))
         }
     }
@@ -66,18 +68,28 @@ export default function Clothlist(){
     })
     .then(response => {
         if (response.ok)
-            fetchData();
+            fetchCloths();
         else
             alert('Something went wrong in the addition!')
     })
     .catch(err => console.error(err))
 }
 
-console.log(clothes)
+const editCloth = (cloth) => {
+    fetch('api/cloths/' + cloth.id, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(cloth)
+    }) 
+    .then(res => fetchCloths())
+    .catch(err => console.error(err))
+}
 
 return (
     <div>
-        <AddCloth addCloth={addCloth}/>
+        <AddCloth addCloth={addCloth} producers={producers}/>
     <div className='ag-theme-material' style={{height: 650, width: '65%', margin:'auto'}}>
     <AgGridReact
         rowData={clothes}
