@@ -72,7 +72,7 @@ export default function AddCloth(props) {
                 variant='standard'
                 >
                 {producers.map((option) => (
-                    <MenuItem key={option.producerid} value={option.name}>
+                    <MenuItem key={option.producerid} value={option}>
                         {option.name}
                     </MenuItem>
                     ))}
